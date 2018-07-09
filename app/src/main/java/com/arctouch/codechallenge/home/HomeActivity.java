@@ -3,15 +3,13 @@ package com.arctouch.codechallenge.home;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ProgressBar;
 
 import com.arctouch.codechallenge.R;
-import com.arctouch.codechallenge.api.service.MovieApiService;
-import com.arctouch.codechallenge.model.Movie;
-
-import java.util.ArrayList;
+import com.arctouch.codechallenge.controllers.MovieController;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -26,11 +24,14 @@ public class HomeActivity extends AppCompatActivity {
         this.recyclerView = findViewById(R.id.recyclerView);
         this.progressBar = findViewById(R.id.progressBar);
 
-        HomeAdapter hAdapter = new HomeAdapter(new ArrayList<Movie>());
+        HomeAdapter hAdapter = new HomeAdapter();
+
         recyclerView.setAdapter(hAdapter);
-        MovieApiService.chargeGenreAndMovies(hAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        recyclerView.addOnScrollListener(new HomeAdapterScrollListener((LinearLayoutManager)recyclerView.getLayoutManager(), progressBar, hAdapter));
+
+        MovieController.chargeGenreAndMovies(hAdapter);
+
         progressBar.setVisibility(View.GONE);
-
-
     }
 }
